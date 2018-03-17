@@ -102,3 +102,9 @@ func SubString(s string, l int) string {
 	}
 	return s[0:l]
 }
+
+func PanicOnError(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
