@@ -112,20 +112,20 @@ func PanicOnError(e error) {
 
 var nonAlphaNumRegex = regexp.MustCompile(`[^0-9A-Za-z]+`)
 
-func Tags(s string) (tags []string) {
+func Tags(s string, minChar, maxNum int) (tags []string) {
 	words := nonAlphaNumRegex.Split(s, -1)
 	if len(words) == 0 {
 		return
 	}
 	for _, w := range words {
-		if len(w) > 2 && !IsStopWord(w) {
+		if len(w) > minChar && !IsStopWord(w) {
 			tags = append(tags, w)
 		}
-		if len(tags) > 10 {
+		if len(tags) > maxNum {
 			break
 		}
 	}
-	return words
+	return
 
 }
 
