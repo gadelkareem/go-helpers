@@ -140,3 +140,15 @@ func IsStopWord(s string) bool {
 	}
 	return false
 }
+
+func RunEvery(ttl time.Duration, f func()) {
+	ticker := time.NewTicker(ttl)
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				f()
+			}
+		}
+	}()
+}
