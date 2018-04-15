@@ -1,9 +1,8 @@
-package helpers
+package h
 
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"github.com/astaxie/beego/logs"
 	"html"
 	"math/rand"
 	"regexp"
@@ -11,6 +10,8 @@ import (
 	"syscall"
 	"time"
 	"unicode/utf8"
+
+	"github.com/astaxie/beego/logs"
 )
 
 func RandomNumber(min int, max int) int {
