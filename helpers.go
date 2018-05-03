@@ -4,14 +4,15 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"html"
+	"io/ioutil"
 	"math/rand"
+	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 	"syscall"
 	"time"
 	"unicode/utf8"
-
-	"github.com/astaxie/beego/logs"
 )
 
 func RandomNumber(min int, max int) int {
@@ -27,21 +28,11 @@ func Md5(text string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-func LiftRLimits() (rLimit syscall.Rlimit) {
-	err := syscall.Getrlimit(syscall.RLIMIT_NOFILE, &rLimit)
-	if err != nil {
-		logs.Error("Error Getting Rlimit %v", err)
-	}
+func LiftRLimits() (rLimit syscall.Rlimit, err error) {
+	err = syscall.Getrlimit(syscall.RLIMIT_NOFILE, &rLimit)
 	rLimit.Cur = rLimit.Max
 	err = syscall.Setrlimit(syscall.RLIMIT_NOFILE, &rLimit)
-	if err != nil {
-		logs.Error("Error Setting Rlimit %v", err)
-	}
 	err = syscall.Getrlimit(syscall.RLIMIT_NOFILE, &rLimit)
-	if err != nil {
-		logs.Error("Error Getting Rlimit %v", err)
-	}
-
 	return
 }
 
@@ -152,4 +143,20 @@ func RunEvery(ttl time.Duration, f func()) {
 			}
 		}
 	}()
+}
+
+func ReCaptcha(secret, response string) (bool, error) {
+	resp, err := http.PostForm(
+		"https://www.google.com/recaptcha/api/siteverify",
+		url.Values{
+			"secret":   {secret},
+			"response": {response},
+		},
+	)
+	if err != nil {
+		return false, err
+	}
+	defer resp.Body.Close()
+	b, _ := ioutil.ReadAll(resp.Body)
+	return strings.Contains(string(b), "success\": true"), nil
 }
