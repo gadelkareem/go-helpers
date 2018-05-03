@@ -163,7 +163,6 @@ func ReCaptcha(secret, response string) (bool, error) {
 	return strings.Contains(string(b), "success\": true"), nil
 }
 
-
 //ex: SendMail("127.0.0.1:25", (&mail.Address{"from name", "from@example.com"}).String(), "Email Subject", "message body", []string{(&mail.Address{"to name", "to@example.com"}).String()})
 func SendMail(addr, from, subject, body string, to []string) error {
 	r := strings.NewReplacer("\r\n", "", "\r", "", "\n", "", "%0a", "", "%0d", "")
@@ -195,9 +194,7 @@ func SendMail(addr, from, subject, body string, to []string) error {
 		"Content-Transfer-Encoding: base64\r\n" +
 		"\r\n" + base64.StdEncoding.EncodeToString([]byte(body))
 
-	bMsg := []byte(msg)
-
-	_, err = w.Write(bMsg)
+	_, err = w.Write([]byte(msg))
 	if err != nil {
 		return err
 	}
