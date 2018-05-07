@@ -17,6 +17,18 @@ import (
 	"unicode/utf8"
 )
 
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func RandomString(n int) string {
+	rand.Seed(time.Now().UnixNano())
+	l := len(letterRunes)
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(l)]
+	}
+	return string(b)
+}
+
 func RandomNumber(min int, max int) int {
 	if min == max {
 		return min
