@@ -17,14 +17,14 @@ import (
 	"unicode/utf8"
 )
 
-var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var runes = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 func RandomString(n int) string {
 	rand.Seed(time.Now().UnixNano())
-	l := len(letterRunes)
+	l := len(runes)
 	b := make([]rune, n)
 	for i := range b {
-		b[i] = letterRunes[rand.Intn(l)]
+		b[i] = runes[rand.Intn(l)]
 	}
 	return string(b)
 }
