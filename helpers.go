@@ -4,9 +4,12 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
+	"fmt"
+	"github.com/pkg/errors"
 	"html"
 	"io/ioutil"
 	"math/rand"
+	"net"
 	"net/http"
 	"net/smtp"
 	"net/url"
@@ -232,4 +235,66 @@ func RegexReplaceAllStringFunc(re *regexp.Regexp, str string, repl func([]string
 	}
 
 	return result + str[lastIndex:]
+}
+
+func IsPrivateIp(ip string) (bool, error) {
+	if strings.Contains(ip, ".") {
+		return IsPrivateIpv4(ip)
+	}
+	return IsPrivateIPv6(ip), nil
+}
+
+func IsPrivateIpv4(ipv4 string) (bool, error) {
+	ip := net.ParseIP(ipv4)
+	if ip == nil {
+		errors.New(fmt.Sprintf("Invalid IP %s", ipv4))
+	} else if ip.IsLoopback() {
+		return true, nil
+	} else {
+		_, private24BitBlock, _ := net.ParseCIDR("10.0.0.0/8")
+		_, private20BitBlock, _ := net.ParseCIDR("172.16.0.0/12")
+		_, private16BitBlock, _ := net.ParseCIDR("192.168.0.0/16")
+		return private24BitBlock.Contains(ip) || private20BitBlock.Contains(ip) || private16BitBlock.Contains(ip), nil
+	}
+	return false, nil
+}
+
+func IsPublicIpv6(ipv6 string) bool {
+	if strings.Contains(ipv6, ".") {
+		return false
+	}
+	return !IsPrivateIPv6(ipv6)
+}
+
+func IsPrivateIPv6(ipv6 string) bool {
+	if ipv6 == "::" || ipv6 == "::1" {
+		return true
+	}
+	s := strings.Split(ipv6, ":")
+	if len(s) < 1 {
+		return false
+	}
+	firstWord := s[0]
+	if (strings.HasPrefix(firstWord, "fc") || strings.HasPrefix(firstWord, "fd")) && len(firstWord) >= 4 {
+		return true
+	} else if firstWord == "fe80" || firstWord == "100" {
+		return true
+	}
+
+	return false
+}
+
+func NetworkInterfaces() (interfaces []net.Interface, err error) {
+	netInterfaces, err := net.Interfaces()
+	if err != nil {
+		return
+	}
+
+	for _, networkInterface := range netInterfaces {
+		if networkInterface.Flags&net.FlagUp == 0 || networkInterface.Flags&net.FlagLoopback != 0 {
+			continue
+		}
+		interfaces = append(interfaces, networkInterface)
+	}
+	return
 }
