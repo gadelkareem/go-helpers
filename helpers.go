@@ -304,3 +304,17 @@ func NetworkInterfaces() (interfaces []net.Interface, err error) {
 	}
 	return
 }
+
+func MapSearch(i interface{}, keys ...string) (m map[string]interface{}, b bool) {
+	m, b = i.(map[string]interface{})
+	if !b {
+		return
+	}
+	for _, k := range keys {
+		m, b = m[k].(map[string]interface{})
+		if !b {
+			return
+		}
+	}
+	return
+}
