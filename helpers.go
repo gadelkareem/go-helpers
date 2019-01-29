@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/smtp"
 	"net/url"
+	"os"
 	"regexp"
 	"strings"
 	"syscall"
@@ -116,6 +117,12 @@ func SubString(s string, l int) string {
 func PanicOnError(e error) {
 	if e != nil {
 		panic(e)
+	}
+}
+
+func LogOnError(e error) {
+	if e != nil {
+		fmt.Fprintf(os.Stderr, e.Error())
 	}
 }
 
@@ -317,4 +324,37 @@ func MapSearch(i interface{}, keys ...string) (m map[string]interface{}, b bool)
 		}
 	}
 	return
+}
+
+type Flock struct {
+	*os.File
+}
+func NewFlock(path string) (*Flock, error) {
+	f, err := os.OpenFile(path, syscall.O_CREAT|syscall.O_RDWR|syscall.O_CLOEXEC, 0666)
+	if err != nil {
+		return nil, err
+	}
+
+	err = syscall.FcntlFlock(
+		f.Fd(),
+		syscall.F_SETLK,
+		&syscall.Flock_t{
+			Type:   syscall.F_WRLCK,
+			Whence: io.SeekStart,
+			Start:  0,
+			Len:    0,
+		})
+	if err != nil {
+		return nil, err
+	}
+
+	return &Flock{f}, nil
+}
+
+func (f *Flock) UnLock() error {
+	err := syscall.Flock(int(f.Fd()), syscall.LOCK_UN)
+	if err != nil {
+		return err
+	}
+	return f.Close()
 }
