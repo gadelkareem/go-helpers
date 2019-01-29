@@ -4,9 +4,10 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
+	"errors"
 	"fmt"
-	"github.com/pkg/errors"
 	"html"
+	"io"
 	"io/ioutil"
 	"math/rand"
 	"net"
@@ -329,6 +330,7 @@ func MapSearch(i interface{}, keys ...string) (m map[string]interface{}, b bool)
 type Flock struct {
 	*os.File
 }
+
 func NewFlock(path string) (*Flock, error) {
 	f, err := os.OpenFile(path, syscall.O_CREAT|syscall.O_RDWR|syscall.O_CLOEXEC, 0666)
 	if err != nil {
