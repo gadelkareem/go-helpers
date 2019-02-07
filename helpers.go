@@ -360,3 +360,20 @@ func (f *Flock) UnLock() error {
 	}
 	return f.Close()
 }
+
+type WaitGroupRunner struct {
+	*sync.WaitGroup
+}
+
+func NewWgExec() *WaitGroupRunner {
+	return &WaitGroupRunner{}
+}
+
+func (w *WaitGroupRunner) Run(f func()) {
+	w.Add(1)
+	go func() {
+		defer w.Done()
+		f()
+	}()
+}
+
