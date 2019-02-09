@@ -17,6 +17,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 	"unicode/utf8"
@@ -376,4 +377,3 @@ func (w *WaitGroupRunner) Run(f func()) {
 		f()
 	}()
 }
-
