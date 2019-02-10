@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"html"
@@ -389,5 +390,16 @@ func GetUrl(u string) (c string, err error) {
 		return
 	}
 	c = string(b)
+
 	return
+}
+
+func JsonUrl(u string, t interface{}) (err error) {
+	r, err := http.Get(u)
+	if err != nil {
+		return
+	}
+	defer r.Body.Close()
+
+	return json.NewDecoder(r.Body).Decode(t)
 }
