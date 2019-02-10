@@ -377,3 +377,17 @@ func (w *WaitGroupRunner) Run(f func()) {
 		f()
 	}()
 }
+
+func GetUrl(u string) (c string, err error) {
+	r, err := http.Get(u)
+	if err != nil {
+		return
+	}
+	defer r.Body.Close()
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return
+	}
+	c = string(b)
+	return
+}
