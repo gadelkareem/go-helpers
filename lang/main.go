@@ -7,12 +7,20 @@ type Lang struct {
 	NativeName string
 }
 
-func Language(iso string) *Lang {
+func CodeToLang(iso string) *Lang {
 	iso = strings.ToLower(iso[0:2])
 	if l, ok := isoLangs[iso]; ok {
 		return &l
 	}
 	return nil
+}
+
+func CodeToLangName(iso string) string {
+	l := CodeToLang(iso)
+	if l != nil {
+		return l.Name
+	}
+	return ""
 }
 
 var isoLangs = map[string]Lang{
