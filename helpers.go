@@ -365,17 +365,20 @@ func (f *Flock) UnLock() error {
 
 type WaitGroupRunner struct {
 	*sync.WaitGroup
+	guard chan struct{}
 }
 
-func NewWgExec() *WaitGroupRunner {
-	return &WaitGroupRunner{}
+func NewWgExec(maxConcurrency int64) *WaitGroupRunner {
+	return &WaitGroupRunner{guard: make(chan struct{}, maxConcurrency)}
 }
 
 func (w *WaitGroupRunner) Run(f func()) {
+	w.guard <- struct{}{}
 	w.Add(1)
 	go func() {
 		defer w.Done()
 		f()
+		<-w.guard
 	}()
 }
 
