@@ -369,7 +369,7 @@ type WaitGroupRunner struct {
 }
 
 func NewWgExec(maxConcurrency int64) *WaitGroupRunner {
-	return &WaitGroupRunner{guard: make(chan struct{}, maxConcurrency)}
+	return &WaitGroupRunner{WaitGroup: &sync.WaitGroup{}, guard: make(chan struct{}, maxConcurrency)}
 }
 
 func (w *WaitGroupRunner) Run(f func()) {
