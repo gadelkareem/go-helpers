@@ -372,12 +372,12 @@ func NewWgExec(maxConcurrency int64) *WaitGroupRunner {
 	return &WaitGroupRunner{WaitGroup: &sync.WaitGroup{}, guard: make(chan struct{}, maxConcurrency)}
 }
 
-func (w *WaitGroupRunner) Run(f func()) {
+func (w *WaitGroupRunner) Run(f func(params ...interface{}), args ...interface{}) {
 	w.guard <- struct{}{}
 	w.Add(1)
 	go func() {
 		defer w.Done()
-		f()
+		f(args...)
 		<-w.guard
 	}()
 }
