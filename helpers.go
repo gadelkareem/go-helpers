@@ -406,3 +406,12 @@ func JsonUrl(u string, t interface{}) (err error) {
 
 	return json.NewDecoder(r.Body).Decode(t)
 }
+
+func OneOf(s ...string) string {
+	for _, t := range s {
+		if t != "" {
+			return t
+		}
+	}
+	return ""
+}
