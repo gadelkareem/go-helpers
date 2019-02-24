@@ -415,3 +415,30 @@ func OneOf(s ...string) string {
 	}
 	return ""
 }
+
+func OneTimeOf(s ...time.Time) time.Time {
+	for _, t := range s {
+		if !t.IsZero() {
+			return t
+		}
+	}
+	return time.Time{}
+}
+
+func OneSliceOf(s ...[]string) []string {
+	for _, t := range s {
+		if len(t) > 0 {
+			return t
+		}
+	}
+	return nil
+}
+
+func OneFloat64Of(s ...float64) float64 {
+	for _, t := range s {
+		if t != float64(0) {
+			return t
+		}
+	}
+	return 0
+}
