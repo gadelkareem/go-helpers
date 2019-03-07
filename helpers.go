@@ -383,7 +383,14 @@ func (w *WaitGroupRunner) Run(f func(params ...interface{}), args ...interface{}
 }
 
 func GetUrl(u string) (c string, err error) {
-	r, err := http.Get(u)
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", u, nil)
+	if err != nil {
+		return
+	}
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
+
+	r, err := client.Do(req)
 	if err != nil {
 		return
 	}
