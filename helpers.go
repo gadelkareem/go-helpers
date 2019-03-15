@@ -382,6 +382,11 @@ func (w *WaitGroupRunner) Run(f func(params ...interface{}), args ...interface{}
 	}()
 }
 
+func ParseUrl(s string) *url.URL {
+	u, _ := url.Parse(s)
+	return u
+}
+
 func GetUrl(u string) (c string, err error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", u, nil)
