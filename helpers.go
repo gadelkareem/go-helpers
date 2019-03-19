@@ -111,10 +111,11 @@ func Slug(s string) string {
 }
 
 func SubString(s string, l int) string {
-	if len(s) <= l {
+	rs := []rune(s)
+	if len(rs) <= l {
 		return s
 	}
-	return s[0:l]
+	return string(rs[0:l])
 }
 
 func PanicOnError(e error) {
