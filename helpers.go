@@ -1,6 +1,7 @@
 package h
 
 import (
+	"bufio"
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
@@ -454,4 +455,22 @@ func OneFloat64Of(s ...float64) float64 {
 		}
 	}
 	return 0
+}
+
+func FileToArray(path string) ([]string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		l := scanner.Text()
+		if l != "" {
+			lines = append(lines, l)
+		}
+	}
+	return lines, scanner.Err()
 }
