@@ -2,6 +2,7 @@ package h
 
 import (
 	"bufio"
+	"compress/gzip"
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
@@ -395,26 +396,38 @@ func ParseUrl(s string) *url.URL {
 	return u
 }
 
-func GetUrl(u string) (c string, err error) {
-	client := &http.Client{}
+func GetResponse(u string) (r *http.Response, err error) {
+	c := &http.Client{}
 	req, err := http.NewRequest("GET", u, nil)
 	if err != nil {
 		return
 	}
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
 
-	r, err := client.Do(req)
+	return c.Do(req)
+}
+
+func GetUrl(u string) (b []byte, err error) {
+	r, err := GetResponse(u)
 	if err != nil {
 		return
 	}
 	defer r.Body.Close()
-	b, err := ioutil.ReadAll(r.Body)
+	b, err = ioutil.ReadAll(r.Body)
+	return
+}
+
+func GetGzUrl(u string) (b []byte, err error) {
+	r, err := GetResponse(u)
 	if err != nil {
 		return
 	}
-	c = string(b)
-
-	return
+	defer r.Body.Close()
+	gz, err := gzip.NewReader(r.Body)
+	if err != nil {
+		return
+	}
+	return ioutil.ReadAll(gz)
 }
 
 func JsonUrl(u string, t interface{}) (err error) {
@@ -480,7 +493,6 @@ func FileToArray(path string) ([]string, error) {
 	}
 	return lines, scanner.Err()
 }
-
 
 func InArray(k string, arr []string) bool {
 	for _, v := range arr {
