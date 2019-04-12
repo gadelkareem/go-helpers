@@ -547,6 +547,10 @@ var isoLangs = map[string]Lang{
 		Name:       "Portuguese",
 		NativeName: "Português",
 	},
+	"pb": {
+		Name:       "Portuguese",
+		NativeName: "Português",
+	},
 	"qu": {
 		Name:       "Quechua",
 		NativeName: "Runa Simi, Kichwa",
