@@ -23,6 +23,17 @@ func CodeToLangName(iso string) string {
 	return ""
 }
 
+func LangNameToCode(s string) string {
+	s = strings.ToLower(s)
+	for c, l := range isoLangs {
+		if s == strings.ToLower(l.Name) ||
+			s == strings.ToLower(l.NativeName) {
+			return c
+		}
+	}
+	return ""
+}
+
 var isoLangs = map[string]Lang{
 	"ab": {
 		Name:       "Abkhaz",
