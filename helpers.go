@@ -480,3 +480,13 @@ func FileToArray(path string) ([]string, error) {
 	}
 	return lines, scanner.Err()
 }
+
+
+func InArray(k string, arr []string) bool {
+	for _, v := range arr {
+		if k == v {
+			return true
+		}
+	}
+	return false
+}
