@@ -25,15 +25,43 @@ func CodeToLangName(iso string) string {
 
 func LangNameToCode(s string) string {
 	s = strings.ToLower(s)
-	for c, l := range isoLangs {
-		if s == strings.ToLower(l.Name) ||
-			s == strings.ToLower(l.NativeName) {
+	if c, ok := filter[s]; ok {
+		return c
+	}
+	for l, c := range filter {
+		if strings.Contains(s, l) {
 			return c
 		}
 	}
 	return ""
 }
 
+func prepareFilter() map[string]string {
+	names := make(map[string]string)
+	for c, l := range isoLangs {
+		fillNames(l.Name, c, names)
+		fillNames(l.NativeName, c, names)
+	}
+	return names
+}
+
+func fillNames(n, c string, names map[string]string) {
+	n = strings.TrimSpace(n)
+	if n == "" {
+		return
+	}
+	n = strings.ToLower(n)
+	names[n] = c
+	for _, n = range strings.Split(n, ",") {
+		n = strings.TrimSpace(n)
+		if n == "" {
+			return
+		}
+		names[n] = strings.TrimSpace(c)
+	}
+}
+
+var filter = prepareFilter()
 var isoLangs = map[string]Lang{
 	"ab": {
 		Name:       "Abkhaz",
@@ -136,7 +164,7 @@ var isoLangs = map[string]Lang{
 		NativeName: "ဗမာစာ",
 	},
 	"ca": {
-		Name:       "Catalan; Valencian",
+		Name:       "Catalan, Valencian",
 		NativeName: "Català",
 	},
 	"ch": {
@@ -148,7 +176,7 @@ var isoLangs = map[string]Lang{
 		NativeName: "нохчийн мотт",
 	},
 	"ny": {
-		Name:       "Chichewa; Chewa; Nyanja",
+		Name:       "Chichewa, Chewa, Nyanja",
 		NativeName: "chiCheŵa, chinyanja",
 	},
 	"zh": {
@@ -184,7 +212,7 @@ var isoLangs = map[string]Lang{
 		NativeName: "dansk",
 	},
 	"dv": {
-		Name:       "Divehi; Dhivehi; Maldivian;",
+		Name:       "Divehi, Dhivehi, Maldivian,",
 		NativeName: "ދިވެހި",
 	},
 	"nl": {
@@ -224,7 +252,7 @@ var isoLangs = map[string]Lang{
 		NativeName: "français, langue française",
 	},
 	"ff": {
-		Name:       "Fula; Fulah; Pulaar; Pular",
+		Name:       "Fula, Fulah, Pulaar, Pular",
 		NativeName: "Fulfulde, Pulaar, Pular",
 	},
 	"gl": {
@@ -252,7 +280,7 @@ var isoLangs = map[string]Lang{
 		NativeName: "ગુજરાતી",
 	},
 	"ht": {
-		Name:       "Haitian; Haitian Creole",
+		Name:       "Haitian, Haitian Creole",
 		NativeName: "Kreyòl ayisyen",
 	},
 	"ha": {
@@ -289,7 +317,7 @@ var isoLangs = map[string]Lang{
 	},
 	"ie": {
 		Name:       "Interlingue",
-		NativeName: "Originally called Occidental; then Interlingue after WWII",
+		NativeName: "Originally called Occidental, then Interlingue after WWII",
 	},
 	"ga": {
 		Name:       "Irish",
@@ -600,7 +628,7 @@ var isoLangs = map[string]Lang{
 		NativeName: "српски језик",
 	},
 	"gd": {
-		Name:       "Scottish Gaelic; Gaelic",
+		Name:       "Scottish Gaelic, Gaelic",
 		NativeName: "Gàidhlig",
 	},
 	"sn": {
@@ -628,7 +656,7 @@ var isoLangs = map[string]Lang{
 		NativeName: "Sesotho",
 	},
 	"es": {
-		Name:       "Spanish; Castilian",
+		Name:       "Spanish, Castilian",
 		NativeName: "español, castellano",
 	},
 	"su": {
