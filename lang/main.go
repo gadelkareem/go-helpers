@@ -9,7 +9,7 @@ type Lang struct {
 
 func CodeToLang(iso string) *Lang {
 	iso = strings.ToLower(iso[0:2])
-	if l, ok := isoLangs[iso]; ok {
+	if l, ok := IsoLangs[iso]; ok {
 		return &l
 	}
 	return nil
@@ -38,7 +38,7 @@ func LangNameToCode(s string) string {
 
 func prepareFilter() map[string]string {
 	names := make(map[string]string)
-	for c, l := range isoLangs {
+	for c, l := range IsoLangs {
 		fillNames(l.Name, c, names)
 		fillNames(l.NativeName, c, names)
 	}
@@ -62,7 +62,7 @@ func fillNames(n, c string, names map[string]string) {
 }
 
 var filter = prepareFilter()
-var isoLangs = map[string]Lang{
+var IsoLangs = map[string]Lang{
 	"ab": {
 		Name:       "Abkhaz",
 		NativeName: "аҧсуа",
