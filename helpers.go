@@ -157,7 +157,7 @@ func TrimWhitespace(s string) string {
 	return strings.TrimSpace(whitespaceRegex.ReplaceAllString(s, " "))
 }
 
-var lineRegex = regexp.MustCompile(`[\s\t\r\n\\a]+`)
+var lineRegex = regexp.MustCompile(`[\s\t\r\n]+`)
 
 func TrimLine(s string) string {
 	return strings.TrimSpace(lineRegex.ReplaceAllString(s, " "))
