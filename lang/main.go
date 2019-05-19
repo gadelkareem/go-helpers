@@ -288,7 +288,7 @@ var IsoLangs = map[string]Lang{
 		NativeName: "Hausa, هَوُسَ",
 	},
 	"he": {
-		Name:       "Hebrew (modern)",
+		Name:       "Hebrew",
 		NativeName: "עברית",
 	},
 	"hz": {
