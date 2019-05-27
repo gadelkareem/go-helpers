@@ -8,6 +8,9 @@ type Lang struct {
 }
 
 func CodeToLang(iso string) *Lang {
+	if len(iso) < 2 {
+		return nil
+	}
 	iso = strings.ToLower(iso[0:2])
 	if l, ok := IsoLangs[iso]; ok {
 		return &l
