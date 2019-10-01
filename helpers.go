@@ -262,6 +262,11 @@ func RegexReplaceAllStringFunc(re *regexp.Regexp, str string, repl func([]string
 	return result + str[lastIndex:]
 }
 
+func IsValidIp(address string) bool {
+	ip := net.ParseIP(address)
+	return ip.To4() != nil || ip.To16() != nil
+}
+
 func IsPrivateIp(ip string) (bool, error) {
 	if strings.Contains(ip, ".") {
 		return IsPrivateIpv4(ip)
