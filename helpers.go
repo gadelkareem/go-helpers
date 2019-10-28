@@ -514,7 +514,6 @@ func InArray(k string, arr []string) bool {
 	return false
 }
 
-
 func FileExists(path string) bool {
 	_, err := os.Stat(path)
 	if err != nil {
