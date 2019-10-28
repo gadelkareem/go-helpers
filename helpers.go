@@ -55,6 +55,12 @@ func LiftRLimits() (rLimit syscall.Rlimit, err error) {
 	err = syscall.Getrlimit(syscall.RLIMIT_NOFILE, &rLimit)
 	rLimit.Cur = rLimit.Max
 	err = syscall.Setrlimit(syscall.RLIMIT_NOFILE, &rLimit)
+	if err != nil {
+		err = syscall.Setrlimit(syscall.RLIMIT_NOFILE, &syscall.Rlimit{Cur: 1048576, Max: rLimit.Max})
+		if err != nil {
+			return
+		}
+	}
 	err = syscall.Getrlimit(syscall.RLIMIT_NOFILE, &rLimit)
 	return
 }
