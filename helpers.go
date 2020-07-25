@@ -518,12 +518,12 @@ func FileExists(path string) bool {
     _, err := os.Stat(path)
     if err != nil {
         if !os.IsNotExist(err) {
-            fmt.Printf("%+v\n", err)
+            fmt.Fprintf(os.Stderr, err.Error())
         }
         return false
     }
 
-    return false
+    return true
 }
 
 func WriteFile(path, content string) (err error) {
@@ -535,4 +535,20 @@ func WriteFile(path, content string) (err error) {
 
     _, err = f.WriteString(content)
     return
+}
+
+func ReadFile(p string) (string, error) {
+    b, err := ioutil.ReadFile(p)
+    if err != nil {
+        return "", err
+    }
+    return string(b), nil
+}
+
+func Base64Decode(s string) (string, error) {
+    b, err := base64.StdEncoding.DecodeString(s)
+    if err != nil {
+        return "", err
+    }
+    return string(b), nil
 }
